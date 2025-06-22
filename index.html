@@ -329,29 +329,50 @@ input:focus, select:focus {
 <script>
 function handleSubmit(event) {
     event.preventDefault();
-    
-    // Form validation
+
+    // === VALIDATION LOGIC ===
     const mobile = document.getElementById('mobile').value;
     const altMobile = document.getElementById('alt_mobile').value;
-    
-    if(mobile && mobile.length !== 10) {
+
+    if (mobile && mobile.length !== 10) {
         alert("Please enter a valid 10-digit mobile number");
         return;
     }
-    
-    if(altMobile && altMobile.length !== 10) {
+
+    if (altMobile && altMobile.length !== 10) {
         alert("Please enter a valid 10-digit alternate mobile number");
         return;
     }
-    
-    if(altMobile && altMobile === mobile) {
+
+    if (altMobile && altMobile === mobile) {
         alert("Alternate mobile number should be different from primary mobile number");
         return;
     }
-    
-    // Submit form
-    alert("Thank you! Your application has been submitted successfully.");
-    document.getElementById("registrationForm").reset();
+
+    // === COLLECT FORM DATA ===
+    const form = document.getElementById("registrationForm");
+    const formData = {};
+    new FormData(form).forEach((value, key) => {
+        formData[key] = value;
+    });
+
+    // === SEND TO GOOGLE SHEETS ===
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbxPHdX5QVIOe4NMmE3-RZ6cO1WfAny-P0vBa4mIwJhE4BlE8Y2TYc8Sk0IY9migclgT/exec';
+    fetch(scriptURL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    })
+    .then(response => {
+        alert("Thank you! Your application has been submitted successfully.");
+        form.reset();
+    })
+    .catch(error => {
+        alert("Error submitting the form. Try again later.");
+        console.error(error);
+    });
 }
 </script>
 </body>
