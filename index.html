@@ -326,58 +326,54 @@ input:focus, select:focus {
     </div>
 </div>
 
+<!-- Scripts -->
 <script>
 function handleSubmit(event) {
     event.preventDefault();
 
-    // === VALIDATION LOGIC ===
-    const mobile = document.getElementById('mobile').value;
-    const altMobile = document.getElementById('alt_mobile').value;
+    // ===== VALIDATION LOGIC =====
+    const mobile = document.getElementById('mobile').value.trim();
+    const altMobile = document.getElementById('alt_mobile').value.trim();
 
-    if (mobile && mobile.length !== 10) {
-        alert("Please enter a valid 10-digit mobile number");
+    if (mobile.length !== 10) {
+        alert("Please enter a valid 10-digit mobile number.");
         return;
     }
 
     if (altMobile && altMobile.length !== 10) {
-        alert("Please enter a valid 10-digit alternate mobile number");
+        alert("Please enter a valid 10-digit alternate mobile number.");
         return;
     }
 
     if (altMobile && altMobile === mobile) {
-        alert("Alternate mobile number should be different from primary mobile number");
+        alert("Alternate mobile number should be different from primary mobile number.");
         return;
     }
 
-    // === COLLECT FORM DATA ===
+    // ===== FORM DATA GATHERING =====
     const form = document.getElementById("registrationForm");
     const formData = {};
     new FormData(form).forEach((value, key) => {
-        formData[key] = value;
+        formData[key] = value.trim();
     });
 
-    // === SEND TO GOOGLE SHEETS ===
-const scriptURL = 'https://script.google.com/macros/s/AKfycbw8r_7YLThUHL0_FQSSRVGl_32vfNxxM2o4tkZlI0HXpdigkaYdUOkT1sO331n8dyCP/exec';
-
-const form = document.querySelector('#yourFormId'); // Replace with your actual form ID
-form.addEventListener('submit', e => {
-  e.preventDefault();
-
-  const formData = new FormData(form);
-
-  fetch(scriptURL, {
-    method: 'POST',
-    body: formData
-  })
+    // ===== POST TO GOOGLE SHEETS =====
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzh8QUF97xAy3bwxOfo1zaB6xRPI_7ksGXTsacTNCWsBq-RgMD13ylrq8_lcI54kmvJ/exec';
+    fetch(scriptURL, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+    })
     .then(response => {
-      alert("Thank you! Your application has been submitted successfully.");
-      form.reset();
+        alert("Thank you! Your application has been submitted successfully.");
+        form.reset();
     })
     .catch(error => {
-      alert("Error submitting the form. Try again later.");
-      console.error(error);
+        alert("Error submitting the form. Try again later.");
+        console.error(error);
     });
-});
 }
 </script>
 </body>
