@@ -357,22 +357,27 @@ function handleSubmit(event) {
     });
 
     // === SEND TO GOOGLE SHEETS ===
-    const scriptURL = 'https://script.google.com/macros/s/AKfycbw8r_7YLThUHL0_FQSSRVGl_32vfNxxM2o4tkZlI0HXpdigkaYdUOkT1sO331n8dyCP/exec';
-    fetch(scriptURL, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-    })
+const scriptURL = 'https://script.google.com/macros/s/AKfycbw8r_7YLThUHL0_FQSSRVGl_32vfNxxM2o4tkZlI0HXpdigkaYdUOkT1sO331n8dyCP/exec';
+
+const form = document.querySelector('#yourFormId'); // Replace with your actual form ID
+form.addEventListener('submit', e => {
+  e.preventDefault();
+
+  const formData = new FormData(form);
+
+  fetch(scriptURL, {
+    method: 'POST',
+    body: formData
+  })
     .then(response => {
-        alert("Thank you! Your application has been submitted successfully.");
-        form.reset();
+      alert("Thank you! Your application has been submitted successfully.");
+      form.reset();
     })
     .catch(error => {
-        alert("Error submitting the form. Try again later.");
-        console.error(error);
+      alert("Error submitting the form. Try again later.");
+      console.error(error);
     });
+});
 }
 </script>
 </body>
